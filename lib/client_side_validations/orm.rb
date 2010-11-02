@@ -157,13 +157,13 @@ module ClientSideValidations
           end
 
           if numericality?(kind)
-            messages['numericality'] = I18n.translate(i18n_prefix + 'errors.messages.not_a_number')
+            messages['numericality'] = I18n.translate('activerecord.errors.messages.not_a_number')
           end
 
           if required?(kind, options)
             unless messages['required']
               if ['greater_than', 'min', 'less_than', 'max', 'odd', 'even'].include?(kind)
-                messages['required']     = I18n.translate(i18n_prefix + 'errors.messages.not_a_number')
+                messages['required']     = I18n.translate('activerecord.errors.messages.not_a_number')
               else
                 messages['required'] = options['message']
               end
@@ -174,11 +174,7 @@ module ClientSideValidations
       end
 
       def i18n_prefix
-        if defined?(::ActiveModel)
-          ''
-        else # ActiveRecord 2.x
-          'activerecord.'
-        end
+        'activerecord.'
       end
 
       def numericality?(kind)
@@ -205,7 +201,7 @@ module ClientSideValidations
 end
 
 if defined?(::ActiveModel)
-  klass = ::ActiveModel::Validations
+  klass = ::ActiveRecord::Base
 
 elsif defined?(::ActiveRecord)
   if ::ActiveRecord::VERSION::MAJOR == 2

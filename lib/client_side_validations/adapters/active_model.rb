@@ -38,6 +38,7 @@ module ClientSideValidations
       end
       
       def get_validation_message(validation)
+        plural = I18n.translate('i18n.plural')[:rule]
         default = case validation.kind
         when :presence
           I18n.translate(i18n_prefix + 'errors.messages.blank')
@@ -45,11 +46,11 @@ module ClientSideValidations
           I18n.translate(i18n_prefix + 'errors.messages.invalid')
         when :length
           if count = validation.options[:is]
-            I18n.translate(i18n_prefix + 'errors.messages.wrong_length').sub(orm_error_interpolation(:count), count.to_s)
+            I18n.translate(i18n_prefix + 'errors.messages.wrong_length')[plural.call(count)].sub(orm_error_interpolation(:count), count.to_s)
           elsif count = validation.options[:minimum]
-            I18n.translate(i18n_prefix + 'errors.messages.too_short').sub(orm_error_interpolation(:count), count.to_s)
+            I18n.translate(i18n_prefix + 'errors.messages.too_short')[plural.call(count)].sub(orm_error_interpolation(:count), count.to_s)
           elsif count = validation.options[:maximum]
-            I18n.translate(i18n_prefix + 'errors.messages.too_long').sub(orm_error_interpolation(:count), count.to_s)
+            I18n.translate(i18n_prefix + 'errors.messages.too_long')[plural.call(count)].sub(orm_error_interpolation(:count), count.to_s)
           end
         when :numericality
           if validation.options[:only_integer]
@@ -116,17 +117,12 @@ module ClientSideValidations
       end
       
       def i18n_prefix
-        if defined?(::ActiveModel)
-          ''
-        else # ActiveRecord 2.x
-          'activerecord.'
-        end
+        'activerecord.'
       end
       
       def orm_error_interpolation(name)
         if defined?(::ActiveModel)
           "%{#{name}}"
-          
         else # ActiveRecord 2.x
           "{{#{name}}}"
         end
