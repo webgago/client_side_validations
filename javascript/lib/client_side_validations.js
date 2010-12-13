@@ -38,6 +38,11 @@ jQuery.validator.addMethod("format", function(value, element, params) {
   return this.optional(element) || pattern.test(value);
 }, jQuery.validator.format("Invalid format."));
 
+jQuery.validator.addMethod("without_format", function(value, element, params) { 
+  var pattern = new RegExp(params, "i");
+  return this.optional(element) || !pattern.test(value);
+}, jQuery.validator.format("Invalid format."));
+
 jQuery.validator.addMethod("acceptance", function(value, element, params) { 
   return element.checked; 
 }, jQuery.validator.format("Was not accepted."));
